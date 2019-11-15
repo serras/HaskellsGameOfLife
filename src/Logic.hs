@@ -10,9 +10,6 @@ data Cell = Live | Dead deriving Eq
 -- | Description of a grid
 type Grid = Point -> Cell
 
-cUTOFF :: Integer
-cUTOFF = 200
-
 gameOfLife :: Grid -> Integer -> Grid
 gameOfLife initial = curry (memoFix go)
   where
