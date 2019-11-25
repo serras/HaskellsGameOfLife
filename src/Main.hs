@@ -14,24 +14,27 @@ main = do
   initialGrid <- parseInitiaGrid <$> B.readFile file
   putStrLn "finished parsing"
   let f = gameOfLife initialGrid
-  animate FullScreen white (gameOfLifePicture f)
+  animate FullScreen white (gameOfLifeAnimation f)
 
 dIMENSION :: Float
 dIMENSION = 20
 
-gameOfLifePicture :: (Integer -> Grid) -> Float -> Picture
-gameOfLifePicture f (floor . (* 2) -> time)
-  = pictures $ [ translate (fromInteger x * dIMENSION)
-                           (fromInteger y * dIMENSION)
-                           (color c (rectangleSolid dIMENSION dIMENSION))
-               | x :: Integer <- [-50 .. 50]
-               , y :: Integer <- [-50 .. 50]
-               , let c = chooseColor (x, y) ]
-               ++ [color green (text (show time))]
-  where
-    chooseColor p = case f time p of
-                      Live -> red
-                      Dead -> blue
+gameOfLifeAnimation :: (Integer -> Grid) -> Float -> Picture
+gameOfLifeAnimation f t
+  = let time = floor (2 * t)
+    in pictures [ gameOfLifePicture (f time)
+                , color green (text (show time)) ]
+
+gameOfLifePicture :: Grid -> Picture
+gameOfLifePicture g
+  = pictures [ translate (fromInteger x * dIMENSION)
+                         (fromInteger y * dIMENSION)
+                         (color c (rectangleSolid dIMENSION dIMENSION))
+             | x :: Integer <- [-50 .. 50]
+             , y :: Integer <- [-50 .. 50]
+             , let c = chooseColor (g (x, y)) ]
+  where chooseColor Live = red
+        chooseColor Dead = blue
 
 parseInitiaGrid :: B.ByteString -> Grid
 parseInitiaGrid s = memo go
