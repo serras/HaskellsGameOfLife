@@ -33,8 +33,8 @@ gameOfLifePicture g
              | x :: Integer <- [-50 .. 50]
              , y :: Integer <- [-50 .. 50]
              , let c = chooseColor (g (x, y)) ]
-  where chooseColor Live = red
-        chooseColor Dead = blue
+  where chooseColor Alive = red
+        chooseColor Dead  = blue
 
 parseInitiaGrid :: B.ByteString -> Grid
 parseInitiaGrid s = memo go
@@ -47,4 +47,4 @@ parseInitiaGrid s = memo go
       | x >= maxX = Dead
       | y >= B.length (ls !! x)    = Dead
       | B.index (ls !! x) y == '.' = Dead
-      | otherwise                  = Live
+      | otherwise                  = Alive

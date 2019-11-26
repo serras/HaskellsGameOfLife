@@ -6,18 +6,18 @@ import Data.MemoTrie
 -- | A point in the grid
 type Point = (Integer, Integer)
 -- | The status of a cell
-data Cell = Live | Dead deriving Eq
+data Cell = Alive | Dead deriving Eq
 -- | Description of a grid
 type Grid = Point -> Cell
 
 nextStep :: Cell -> [Cell] -> Cell
-nextStep Live adj
-  | count Live adj < 2  = Dead  -- underpopulation
-  | count Live adj > 3  = Dead  -- overpopulation
-  | otherwise           = Live  -- live and let live
+nextStep Alive adj
+  | count Alive adj < 2 = Dead  -- underpopulation
+  | count Alive adj > 3 = Dead  -- overpopulation
+  | otherwise           = Alive  -- Alive and let Alive
 nextStep Dead adj
-  | count Live adj == 3 = Live  -- reproduction
-  | otherwise           = Dead  -- nothing happens
+  | count Alive adj == 3 = Alive  -- reproduction
+  | otherwise            = Dead  -- nothing happens
   
 
 gameOfLifeSuperSlow :: Grid -> Integer -> Grid
